@@ -33,4 +33,4 @@ steps:
       appName: "atc-2024-webwarriors-be-linux-web-app"
       runtimeStack: 'NODE|18.x'
       package: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      startUpCommand: 'npm run dev'
+      startUpCommand: 'npm start'
