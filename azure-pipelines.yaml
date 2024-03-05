@@ -1,5 +1,4 @@
-pool:
-  vmImage: 'ubuntu-latest'
+pool: 'default'
 
 variables:
   node.version: '20.x'
