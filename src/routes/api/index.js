@@ -1,7 +1,6 @@
 const router = require("express").Router();
+const studentRouter = require("./student.route");
 
-router.get("/auth", () => {
-  console.log("done");
-});
+router.get("/auth", studentRouter);
 
 module.exports = router;
