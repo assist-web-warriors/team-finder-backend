@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const router = require("./src/routes/api");
+const { sequelize } = require("./db");
 const { corsEnableMiddleware } = require("./src/middleware/auth.middleware");
 const corsOptions = require("./src/config/cors-options");
 
@@ -15,4 +16,7 @@ app.use(express.json());
 
 app.use("/api", router);
 
-app.listen(PORT, async () => {});
+app.listen(PORT, async () => {
+  const result = await sequelize.sync();
+  console.log(`Port ${PORT}. Synced database.`);
+});
