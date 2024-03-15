@@ -35,7 +35,7 @@ class AuthService {
       };
     } catch (err) {
       return {
-        error: { status: 500, message: 'Register error occurred.', error: err },
+        error: { status: 500, message: 'Register error occurred.', error: err.message },
       };
     }
   }
@@ -56,9 +56,8 @@ class AuthService {
         result: { token: accessToken, message: 'User was logged in.' },
       };
     } catch (err) {
-      console.log(err);
       return {
-        error: { status: 500, message: 'Login error occurred.', error: err },
+        error: { status: 500, message: 'Login error occurred.', error: err.message },
       };
     }
   }
@@ -85,7 +84,7 @@ class AuthService {
         error: {
           status: 500,
           message: 'Token refresh error occurred.',
-          error: err,
+          error: err.message,
         },
       };
     }
