@@ -6,7 +6,7 @@ class AuthController {
     if (!email || !password || !name) return res.sendStatus(400);
 
     const { result, error } = await registerUser(email, password, name);
-    if (error) return res.status(error.status).json(error.message);
+    if (error) return res.status(error.status).json(error.message, error?.error);
 
     return res.status(200).json(result.token);
   }
@@ -16,7 +16,7 @@ class AuthController {
     if (!email || !password) return res.sendStatus(400);
 
     const { result, error } = await loginUser(email, password);
-    if (error) return res.status(error.status).json(error.message);
+    if (error) return res.status(error.status).json(error.message, error?.error);
 
     return res.status(200).json(result.token);
   }
@@ -26,7 +26,7 @@ class AuthController {
     const token = authHeader.split(' ')[1];
 
     const { result, error } = await refreshToken(token);
-    if (error) return res.status(error.status).json(error.message);
+    if (error) return res.status(error.status).json(error.message, error?.error);
 
     return res.status(200).json(result);
   }
