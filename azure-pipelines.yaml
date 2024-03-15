@@ -23,8 +23,8 @@ jobs:
           echo "ACCESS_TOKEN_SECRET=$(ACCESS_TOKEN_SECRET)" >> .env
           echo "ACCESS_TOKEN_EXPIRES_IN=$(ACCESS_TOKEN_EXPIRES_IN)" >> .env
           echo "REFRESH_TOKEN_SECRET=$(REFRESH_TOKEN_SECRET)" >> .env
+          echo "REFRESH_TOKEN_EXPIRES_IN=$(REFRESH_TOKEN_EXPIRES_IN)" >> .env
           echo "WHITELIST_URLS=$(WHITELIST_URLS)" >> .env
-          echo "PORT=$(PORT)" >> .env
         workingDirectory: $(projectRoot)
         displayName: "Create env file"
 
