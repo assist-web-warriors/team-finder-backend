@@ -1,53 +1,34 @@
-const AuthService = require("../service/auth.service");
+const { registerUser, loginUser, refreshToken } = require('../service/auth.service');
 
 class AuthController {
   async signup(req, res) {
-    const { email, password } = req.body; // { email: undefined, password: undefined }
-    if (!email || !password) return res.sendStatus(402);
+    const { email, password, name } = req.body;
+    if (!email || !password || !name) return res.sendStatus(400);
 
-    const { result, error } = await AuthService.registerUser(email, password);
-    if (error) return res.status(500).json(error.message);
+    const { result, error } = await registerUser(email, password, name);
+    if (error) return res.status(error.status).json(error.message);
 
-    res.cookie("jwt", result.tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: "None",
-      secure: false,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    return res.status(200).json(result.tokens.accessToken);
+    return res.status(200).json(result.token);
   }
 
-  async signin(req, res) {
+  async login(req, res) {
     const { email, password } = req.body;
-    if (!email || !password) return res.sendStatus(402);
+    if (!email || !password) return res.sendStatus(400);
 
-    const { result, error } = await AuthService.loginUser(email, password);
-    if (error || !result.tokens?.refreshToken)
-      return res.status(error.status).json(error.message);
+    const { result, error } = await loginUser(email, password);
+    if (error) return res.status(error.status).json(error.message);
 
-    res.cookie("jwt", result.tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: "None",
-      secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    return res.status(200).json(result.tokens.accessToken);
+    return res.status(200).json(result.token);
   }
 
   async refresh(req, res) {
-    const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(402);
+    const authHeader = req.headers['authorization'];
+    const token = authHeader.split(' ')[1];
 
-    const { result, error } = await AuthService.verifyUser(cookies.jwt);
+    const { result, error } = await refreshToken(token);
     if (error) return res.status(error.status).json(error.message);
 
-    res.cookie("jwt", result.tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: "None",
-      secure: false,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    return res.status(200).json(result.tokens.accessToken);
+    return res.status(200).json(result);
   }
 }
 
