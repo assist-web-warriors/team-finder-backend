@@ -4,31 +4,49 @@ variables:
   node.version: '20.x'
   projectRoot: '.'
 
-steps:
-  - task: NodeTool@0
-    displayName: 'Use Node.js $(node.version)'
-    inputs:
-      versionSpec: '$(node.version)'
+jobs:
+  - job: deploy
+    variables:
+      - group: web-warriors-variables
+    steps:
+      - task: NodeTool@0
+        displayName: 'Use Node.js $(node.version)'
+        inputs:
+          versionSpec: '$(node.version)'
 
-  - script: |
-      npm install
-    workingDirectory: $(projectRoot)
-    displayName: "Install dependencies"
-  
-  - task: ArchiveFiles@2
-    displayName: 'Archive files'
-    inputs:
-      rootFolderOrFile: '$(projectRoot)'
-      includeRootFolder: false
-      archiveType: zip
-      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      replaceExistingArchive: true
-  
-  - task: AzureWebApp@1
-    displayName: 'Deploy Azure Web App'
-    inputs:
-      azureSubscription: 'web-warriors-service-connection'
-      appType: 'webAppLinux'
-      appName: "atc-2024-webwarriors-be-linux-web-app"
-      package: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      startUpCommand: 'npm start'
+      - script: |
+          echo "PORT=$(PORT)" >> .env
+          echo "DB_PASSWORD=$(DB_PASSWORD)" >> .env
+          echo "DB_HOST=$(DB_HOST)" >> .env
+          echo "DB_USER=$(DB_USER)" >> .env
+          echo "DN_NAME=$(DN_NAME)" >> .env
+          echo "ACCESS_TOKEN_SECRET=$(ACCESS_TOKEN_SECRET)" >> .env
+          echo "ACCESS_TOKEN_EXPIRES_IN=$(ACCESS_TOKEN_EXPIRES_IN)" >> .env
+          echo "REFRESH_TOKEN_SECRET=$(REFRESH_TOKEN_SECRET)" >> .env
+          echo "WHITELIST_URLS=$(WHITELIST_URLS)" >> .env
+          echo "PORT=$(PORT)" >> .env
+        workingDirectory: $(projectRoot)
+        displayName: "Create env file"
+
+      - script: |
+          npm install
+        workingDirectory: $(projectRoot)
+        displayName: "Install dependencies"
+      
+      - task: ArchiveFiles@2
+        displayName: 'Archive files'
+        inputs:
+          rootFolderOrFile: '$(projectRoot)'
+          includeRootFolder: false
+          archiveType: zip
+          archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          replaceExistingArchive: true
+      
+      - task: AzureWebApp@1
+        displayName: 'Deploy Azure Web App'
+        inputs:
+          azureSubscription: 'web-warriors-service-connection'
+          appType: 'webAppLinux'
+          appName: "atc-2024-webwarriors-be-linux-web-app"
+          package: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          startUpCommand: 'npm start'
