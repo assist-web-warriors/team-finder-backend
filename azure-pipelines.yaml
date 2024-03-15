@@ -30,6 +30,5 @@ steps:
       azureSubscription: 'web-warriors-service-connection'
       appType: 'webAppLinux'
       appName: "atc-2024-webwarriors-be-linux-web-app"
-      runtimeStack: 'NODE|20.x'
       package: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       startUpCommand: 'npm start'
