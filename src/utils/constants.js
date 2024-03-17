@@ -5,15 +5,19 @@ const roles = {
   dep_manager: 'Department Manager',
 };
 
+const rolesArray = Object.values(roles);
+
 const actionEndpoints = {
+  // TODO: refactor access to routes
   createProject: '/create-project',
   updateProject: '/update-project',
   assignSkill: '/assign-skill',
   assignRole: '/assign-role',
-  createDepartment: '/create-department',
-  updateDepartment: '/update-department',
+  // <------------------->
+  createDepartment: '/',
+  getDepartments: '/all',
   register: '/signup',
-  getOrganizationMembers: '/organization-members',
+  getOrganizationMembers: '/organization-members', //user
 };
 
 const roleAvailableActions = {
@@ -28,7 +32,7 @@ const roleAvailableActions = {
   },
 
   [roles.dep_manager]: {
-    [actionEndpoints.updateDepartment]: true,
+    [actionEndpoints.getDepartments]: true,
     [actionEndpoints.assignSkill]: true,
   },
 
@@ -38,4 +42,4 @@ const roleAvailableActions = {
   },
 };
 
-module.exports = { roles, roleAvailableActions };
+module.exports = { roles, roleAvailableActions, rolesArray };

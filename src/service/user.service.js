@@ -6,9 +6,9 @@ const UserInstance = createUserInstance();
 const OrganizationInstance = createOrganizationInstance();
 
 class UserService {
-  async getUserRoles(email) {
+  async getUserRoles(id) {
     try {
-      const user = await UserInstance.findOne({ where: { email } });
+      const user = await UserInstance.findOne({ where: { id } });
       if (!user) {
         return { error: { status: 404, message: 'User was not found.' } };
       }
@@ -23,12 +23,11 @@ class UserService {
     }
   }
 
-  async getOrganizationUsers(email) {
+  async getOrganizationUsers(id) {
     try {
       const members = await sequelize.transaction(async (transaction) => {
-        const user = await UserInstance.findOne({ where: { email } }, { transaction });
         const organization = await OrganizationInstance.findOne(
-          { where: { created_by: user.id } },
+          { where: { created_by: id } },
           { transaction },
         );
         return await UserInstance.findAll(

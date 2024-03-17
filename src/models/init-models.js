@@ -1,8 +1,10 @@
 var DataTypes = require('sequelize').DataTypes;
+var _department = require('./department');
 var _organization = require('./organization');
 var _user = require('./user');
 
 function initModels(sequelize) {
+  var department = _department(sequelize, DataTypes);
   var organization = _organization(sequelize, DataTypes);
   var user = _user(sequelize, DataTypes);
 
@@ -12,6 +14,7 @@ function initModels(sequelize) {
   user.hasMany(organization, { as: 'organizations', foreignKey: 'created_by' });
 
   return {
+    department,
     organization,
     user,
   };

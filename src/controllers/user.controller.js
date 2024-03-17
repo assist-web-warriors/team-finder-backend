@@ -2,9 +2,9 @@ const { getUserRoles, getOrganizationUsers } = require('../service/user.service'
 
 class UserController {
   async getRoles(req, res) {
-    if (!req.email) return res.sendStatus(400);
+    if (!req.userId) return res.sendStatus(400);
 
-    const { result, error } = await getUserRoles(req.email);
+    const { result, error } = await getUserRoles(req.userId);
     if (error)
       return res.status(error.status).json({ message: error.message, error: error?.error });
 
@@ -12,9 +12,9 @@ class UserController {
   }
 
   async getUsers(req, res) {
-    if (!req.email) return res.sendStatus(400);
+    if (!req.userId) return res.sendStatus(400);
 
-    const { result, error } = await getOrganizationUsers(req.email);
+    const { result, error } = await getOrganizationUsers(req.userId);
     if (error)
       return res.status(error.status).json({ message: error.message, error: error?.error });
 

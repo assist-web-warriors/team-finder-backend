@@ -9,7 +9,7 @@ class AuthController {
     if (error)
       return res.status(error.status).json({ message: error.message, error: error?.error });
 
-    return res.status(200).json(result.token);
+    return res.status(200).json({ token: result.token, roles: result.roles });
   }
 
   async signupAdmin(req, res) {
@@ -26,7 +26,7 @@ class AuthController {
     if (error)
       return res.status(error.status).json({ message: error.message, error: error?.error });
 
-    return res.status(200).json(result.token);
+    return res.status(200).json({ token: result.token, roles: result.roles });
   }
 
   async login(req, res) {
@@ -37,7 +37,7 @@ class AuthController {
     if (error)
       return res.status(error.status).json({ message: error.message, error: error?.error });
 
-    return res.status(200).json(result.token);
+    return res.status(200).json({ token: result.token, roles: result.roles });
   }
 
   async refresh(req, res) {
