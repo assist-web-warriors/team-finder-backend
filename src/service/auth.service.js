@@ -89,7 +89,8 @@ class AuthService {
       if (!user) {
         return { error: { status: 401, message: 'Email or password are wrong.' } };
       }
-      const accessToken = signAccessToken({ email, roles: [roles.employee] });
+
+      const accessToken = signAccessToken({ email, roles: user.roles });
 
       return {
         result: { token: accessToken, message: 'User was logged in.' },

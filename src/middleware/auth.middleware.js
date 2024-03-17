@@ -16,8 +16,8 @@ const authMiddleware = (req, res, next) => {
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err?.name === 'TokenExpiredError') return res.status(403).send('jwt expired');
     if (err) return res.sendStatus(401);
+    req.userId = decoded.id;
     req.email = decoded.email;
-    req.userId = decoded.userId;
     req.roles = decoded.roles;
     next();
   });
