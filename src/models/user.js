@@ -41,6 +41,10 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
+      department: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
     },
     {
       sequelize,

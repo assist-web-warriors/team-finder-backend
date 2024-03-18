@@ -1,6 +1,8 @@
 const { createUserInstance } = require('../accessors/user.accessor');
 const { createOrganizationInstance } = require('../accessors/organization.accessor');
 const { sequelize } = require('../../db');
+const { Op } = require('sequelize');
+const { roles } = require('../utils/constants');
 
 const UserInstance = createUserInstance();
 const OrganizationInstance = createOrganizationInstance();
@@ -51,6 +53,40 @@ class UserService {
         error: {
           status: 500,
           message: 'Get organization members error occurred.',
+          error: err.message,
+        },
+      };
+    }
+  }
+
+  async getDepartmentManagers(id) {
+    try {
+      const managers = await sequelize.transaction(async (transaction) => {
+        const organization = await OrganizationInstance.findOne(
+          { where: { created_by: id } },
+          { transaction },
+        );
+        return await UserInstance.findAll(
+          {
+            attributes: ['id', 'name', 'email', 'roles', 'img', 'organization'],
+            where: { organization: organization.id, roles: { [Op.contains]: [roles.dep_manager] } },
+          },
+          { transaction },
+        );
+      });
+
+      if (!managers) {
+        return { error: { status: 404, message: 'Project Managers was not found.' } };
+      }
+
+      return {
+        result: { managers, message: 'Project Manager was found.' },
+      };
+    } catch (err) {
+      return {
+        error: {
+          status: 500,
+          message: 'Get project managers error occurred.',
           error: err.message,
         },
       };

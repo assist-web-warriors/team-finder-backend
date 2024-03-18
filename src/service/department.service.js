@@ -22,10 +22,8 @@ class DepartmentService {
           return { error: { status: 404, message: 'Manager not found.' } };
         }
 
-        if (!manager.organization && manager.roles.includes(roles.dep_manager)) {
-          manager.organization = admin.organization;
-          await manager.save();
-          return await DepartmentInstance.create(
+        if (!manager.department && manager.roles.includes(roles.dep_manager)) {
+          const result = await DepartmentInstance.create(
             {
               organization_id: admin.organization,
               manager: managerId,
@@ -33,6 +31,10 @@ class DepartmentService {
             },
             { transaction },
           );
+          manager.department = result.id;
+          await manager.save();
+
+          return result;
         }
 
         return { error: { status: 400, message: 'Manager has already assign to organization.' } };

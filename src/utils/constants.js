@@ -18,6 +18,7 @@ const actionEndpoints = {
   getDepartments: '/all',
   register: '/signup',
   getOrganizationMembers: '/organization-members', //user
+  getDepartmentManagers: '/department-managers',
 };
 
 const roleAvailableActions = {
@@ -34,6 +35,7 @@ const roleAvailableActions = {
   [roles.dep_manager]: {
     [actionEndpoints.getDepartments]: true,
     [actionEndpoints.assignSkill]: true,
+    [actionEndpoints.getDepartmentManagers]: true,
   },
 
   [roles.employee]: {

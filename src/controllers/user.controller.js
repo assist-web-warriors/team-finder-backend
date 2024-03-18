@@ -1,4 +1,8 @@
-const { getUserRoles, getOrganizationUsers } = require('../service/user.service');
+const {
+  getUserRoles,
+  getOrganizationUsers,
+  getDepartmentManagers: getDepartmentUsers,
+} = require('../service/user.service');
 
 class UserController {
   async getRoles(req, res) {
@@ -19,6 +23,16 @@ class UserController {
       return res.status(error.status).json({ message: error.message, error: error?.error });
 
     return res.status(200).json(result.members);
+  }
+
+  async getDepartmentManagers(req, res) {
+    if (!req.userId) return res.sendStatus(400);
+
+    const { result, error } = await getDepartmentUsers(req.userId);
+    if (error)
+      return res.status(error.status).json({ message: error.message, error: error?.error });
+
+    return res.status(200).json(result.managers);
   }
 }
 
