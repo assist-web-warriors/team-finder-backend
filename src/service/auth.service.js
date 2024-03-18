@@ -31,8 +31,12 @@ class AuthService {
 
       const accessToken = signAccessToken({ email, roles: [roles.employee], id: user.id });
 
+      const userData = user.get({ plain: true });
+      delete userData.password;
+      delete userData.refresh_token;
+
       return {
-        result: { token: accessToken, roles: [roles.employee], message: 'User was registered.' },
+        result: { token: accessToken, user: userData, message: 'User was registered.' },
       };
     } catch (err) {
       return {
@@ -73,10 +77,14 @@ class AuthService {
 
       const accessToken = signAccessToken({ email, roles: [...rolesArray], id: user.id });
 
+      const userData = user.get({ plain: true });
+      delete userData.password;
+      delete userData.refresh_token;
+
       return {
         result: {
           token: accessToken,
-          roles: [...rolesArray],
+          user: userData,
           message: 'Admin and organization was registered.',
         },
       };
@@ -89,7 +97,10 @@ class AuthService {
 
   async loginUser(email, password) {
     try {
-      const user = await UserInstance.findOne({ where: { email, password } });
+      const user = await UserInstance.findOne({
+        attributes: ['id', 'name', 'email', 'roles', 'img', 'organization', 'department'],
+        where: { email, password },
+      });
       if (!user) {
         return { error: { status: 401, message: 'Email or password are wrong.' } };
       }
@@ -97,7 +108,7 @@ class AuthService {
       const accessToken = signAccessToken({ email, roles: user.roles, id: user.id });
 
       return {
-        result: { token: accessToken, roles: user.roles, message: 'User was logged in.' },
+        result: { token: accessToken, user, message: 'User was logged in.' },
       };
     } catch (err) {
       return {
