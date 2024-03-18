@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "swagger": "swagger-jsdoc -d ./src/utils/swagger.js -o ./swagger.json"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -16,6 +17,7 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.1",
     "sequelize-auto": "^0.8.8",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {

@@ -2,14 +2,14 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "API Authentication",
-    "description": "API for user authentication"
+    "title": "API Departamente",
+    "description": "API pentru gestionarea departamentelor"
   },
   "basePath": "/api",
   "paths": {
-    "/auth/signup": {
+    "/department": {
       "post": {
-        "summary": "Create a new user",
+        "summary": "Creează un nou departament",
         "parameters": [
           {
             "name": "body",
@@ -18,13 +18,10 @@
             "schema": {
               "type": "object",
               "properties": {
-                "email": {
+                "department": {
                   "type": "string"
                 },
-                "password": {
-                  "type": "string"
-                },
-                "name": {
+                "manager": {
                   "type": "string"
                 }
               }
@@ -33,13 +30,10 @@
         ],
         "responses": {
           "200": {
-            "description": "User created successfully",
+            "description": "Departament creat cu succes",
             "schema": {
               "type": "object",
               "properties": {
-                "token": {
-                  "type": "string"
-                },
                 "message": {
                   "type": "string"
                 }
@@ -47,97 +41,49 @@
             }
           },
           "400": {
-            "description": "Bad request: Missing email, password, or name"
-          },
-          "409": {
-            "description": "Conflict: User already exists"
-          },
-          "500": {
-            "description": "Internal Server Error: Registration error occurred"
-          }
-        }
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "summary": "Authenticate user",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string"
-                },
-                "password": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User authenticated successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "token": {
-                  "type": "string"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request: Missing email or password"
+            "description": "Cerere incorectă: Lipsesc informații"
           },
           "401": {
-            "description": "Unauthorized: Email or password are wrong"
+            "description": "Neautorizat: Accesul refuzat"
           },
           "500": {
-            "description": "Internal Server Error: Login error occurred"
+            "description": "Eroare internă de server"
           }
         }
-      }
-    },
-    "/auth/refresh": {
+      },
       "get": {
-        "summary": "Refresh access token",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": "Bearer token"
-          }
-        ],
+        "summary": "Obține toate departamentele",
         "responses": {
           "200": {
-            "description": "Token refreshed successfully",
+            "description": "Departamentele au fost returnate cu succes",
             "schema": {
               "type": "object",
               "properties": {
-                "token": {
-                  "type": "string"
-                },
-                "message": {
-                  "type": "string"
+                "departments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "manager": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized: Missing or invalid token"
+            "description": "Neautorizat: Accesul refuzat"
           },
           "500": {
-            "description": "Internal Server Error: Token refresh error occurred"
+            "description": "Eroare internă de server"
           }
         }
       }
