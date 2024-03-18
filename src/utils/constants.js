@@ -14,10 +14,12 @@ const actionEndpoints = {
   assignSkill: '/assign-skill',
   assignRole: '/assign-role',
   // <------------------->
-  createDepartment: '/',
+  getDepartment: '/one',
   getDepartments: '/all',
-  register: '/signup',
-  getOrganizationMembers: '/organization-members', //user
+  createDepartment: '/create',
+  updateDepartment: '/update',
+  deleteDepartment: '/delete',
+  getOrganizationMembers: '/organization-members',
   getDepartmentManagers: '/department-managers',
 };
 
@@ -25,6 +27,8 @@ const roleAvailableActions = {
   [roles.admin]: {
     [actionEndpoints.assignRole]: true,
     [actionEndpoints.createDepartment]: true,
+    [actionEndpoints.updateDepartment]: true,
+    [actionEndpoints.deleteDepartment]: true,
     [actionEndpoints.getOrganizationMembers]: true,
   },
 
@@ -33,14 +37,14 @@ const roleAvailableActions = {
   },
 
   [roles.dep_manager]: {
-    [actionEndpoints.getDepartments]: true,
     [actionEndpoints.assignSkill]: true,
+    [actionEndpoints.getDepartment]: true,
+    [actionEndpoints.getDepartments]: true,
     [actionEndpoints.getDepartmentManagers]: true,
   },
 
   [roles.employee]: {
     [actionEndpoints.assignSkill]: true,
-    [actionEndpoints.register]: true,
   },
 };
 

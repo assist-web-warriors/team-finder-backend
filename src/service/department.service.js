@@ -87,6 +87,106 @@ class DepartmentService {
       };
     }
   }
+
+  async getDepartment(id) {
+    try {
+      const department = await DepartmentInstance.findOne({
+        attributes: ['id', 'manager', 'name', 'skills', 'projects', 'members'],
+        where: { id },
+      });
+
+      if (!department) {
+        return { error: { status: 404, message: 'Department not found.' } };
+      }
+
+      return {
+        result: { department, message: 'Department found.' },
+      };
+    } catch (err) {
+      return {
+        error: {
+          status: 500,
+          message: 'Get department error occurred.',
+          error: err.message,
+        },
+      };
+    }
+  }
+
+  async deleteDepartment(id) {
+    try {
+      const department = await DepartmentInstance.findOne({
+        where: { id },
+      });
+
+      if (!department) {
+        return { error: { status: 404, message: 'Department not found.' } };
+      }
+
+      return {
+        result: { department, message: 'Department found.' },
+      };
+    } catch (err) {
+      return {
+        error: {
+          status: 500,
+          message: 'Get department error occurred.',
+          error: err.message,
+        },
+      };
+    }
+  }
+
+  async updateDepartment(departmentId, newData) {
+    try {
+      const updatedDepartment = await sequelize.transaction(async (transaction) => {
+        const dep = await DepartmentInstance.update(
+          newData,
+          { where: { id: departmentId }, returning: true },
+          { transaction },
+        );
+
+        const oldManager = await UserInstance.findOne(
+          { where: { department: departmentId } },
+          { transaction },
+        );
+
+        if (!oldManager) {
+          return { error: { status: 404, message: 'Old manager was not found.' } };
+        }
+
+        if (newData.manager && oldManager.id !== newData.manager) {
+          oldManager.department = null;
+          await oldManager.save();
+
+          await UserInstance.update(
+            { department: departmentId },
+            { where: { id: newData.manager } },
+            { transaction },
+          );
+        }
+        return dep;
+      });
+
+      const department = updatedDepartment[1][0];
+
+      if (!department) {
+        return { error: { status: 404, message: 'Department not found.' } };
+      }
+
+      return {
+        result: { department, message: 'Department updated.' },
+      };
+    } catch (err) {
+      return {
+        error: {
+          status: 500,
+          message: 'Update department error occurred.',
+          error: err.message,
+        },
+      };
+    }
+  }
 }
 
 module.exports = new DepartmentService();
