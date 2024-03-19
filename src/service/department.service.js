@@ -123,6 +123,12 @@ class DepartmentService {
         return { error: { status: 404, message: 'Department not found.' } };
       }
 
+      await DepartmentInstance.destroy({
+        where: {
+          id,
+        },
+      });
+
       return {
         result: { department, message: 'Department found.' },
       };

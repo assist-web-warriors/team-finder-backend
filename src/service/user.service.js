@@ -76,17 +76,17 @@ class UserService {
       });
 
       if (!managers) {
-        return { error: { status: 404, message: 'Project Managers was not found.' } };
+        return { error: { status: 404, message: 'Department managers were not found.' } };
       }
 
       return {
-        result: { managers, message: 'Project Manager was found.' },
+        result: { managers, message: 'Department managers were not found.' },
       };
     } catch (err) {
       return {
         error: {
           status: 500,
-          message: 'Get project managers error occurred.',
+          message: 'Get department managers error occurred.',
           error: err.message,
         },
       };
