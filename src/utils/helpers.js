@@ -17,11 +17,12 @@ const verifyAccessToken = (token) => {
     if (err?.name === 'TokenExpiredError') {
       return jwt.decode(token, process.env.ACCESS_TOKEN_SECRET);
     }
+    if (!err) return jwt.decode(token, process.env.ACCESS_TOKEN_SECRET);
   });
 };
 
 const verifyRefreshToken = (token, payload) => {
-  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (decoded) => {
+  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
     if (decoded) {
       return signAccessToken(payload);
     }
