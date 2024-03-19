@@ -22,6 +22,7 @@ class DepartmentService {
           return { error: { status: 404, message: 'Manager not found.' } };
         }
 
+        console.log(manager);
         if (!manager.department && manager.roles.includes(roles.dep_manager)) {
           const result = await DepartmentInstance.create(
             {
@@ -37,11 +38,14 @@ class DepartmentService {
           return result;
         }
 
-        return { error: { status: 400, message: 'Manager has already assign to organization.' } };
+        return {
+          error: { status: 400, message: 'Manager is already assigned to an department.' },
+        };
       });
 
       return {
         result: { department, message: 'Department created.' },
+        error: department?.error,
       };
     } catch (err) {
       return {
@@ -123,6 +127,10 @@ class DepartmentService {
         return { error: { status: 404, message: 'Department not found.' } };
       }
 
+      const user = await UserInstance.findOne({
+        where: { id: department.manager },
+      });
+      await user.update({ department: null });
       await DepartmentInstance.destroy({
         where: {
           id,
